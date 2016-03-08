@@ -1,0 +1,71 @@
+﻿@using System.Globalization
+@model WalletOne.Models.CartIndexViewModel
+
+@{
+    ViewBag.Title = "WalletOne Store: Your Cart";
+}
+<h2>Your cart</h2>
+<table align="center" width="90%">
+    <thead>
+        <tr>            
+            <th align="left">Item</th>
+            <th align="right">Price</th>
+            <th align="center">Quantity</th>
+            <th align="right">Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Model.Cart.Lines) {
+<tr>
+    <td align="left">@line.Product.Name</td>
+    <td align="right">@line.Product.Price.ToString("c", CultureInfo.CreateSpecificCulture("ru-RU"))</td>
+    <td align="center">
+        <table>
+            <tr>
+                <td>
+                    @using (Html.BeginForm("TakeFromCart", "Cart")) {
+                    @Html.Hidden("ProductId", line.Product.ProductID)
+                        @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                        <input class="actionButtons" type="submit" value="-" style="padding: .15em 0.55em .2em 0.5em;" />
+                    }
+                </td>
+                <td>
+                    @line.Quantity
+                </td>
+                <td>
+                    @using (Html.BeginForm("AddToCart", "Cart")) {
+                    @Html.Hidden("ProductId", line.Product.ProductID)
+                        @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                        <input class="actionButtons" type="submit" value="+" style="padding: .15em 0.55em .2em 0.5em;" />
+                    }
+                </td>
+            </tr>
+
+        </table>
+    </td>
+
+    <td align="right">@((line.Quantity * line.Product.Price).ToString("c", CultureInfo.CreateSpecificCulture("ru-RU")))</td>
+    <td>
+        @using (Html.BeginForm("RemoveFromCart", "Cart")) {
+            @Html.Hidden("ProductId", line.Product.ProductID)
+            @Html.HiddenFor(x => x.ReturnUrl)
+            <input class="actionButtons" type="submit" value="Remove" />
+        }
+    </td>
+</tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" align="right">Total:</td>
+            <td align="right">
+                @Model.Cart.ComputeTotalValue().ToString("c", CultureInfo.CreateSpecificCulture("ru-RU"))
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<p align="center" class="actionButtons">
+    <a href="@Model.ReturnUrl">Continue shopping</a>
+    @Html.ActionLink("Checkout now", "Checkout")
+</p>
+

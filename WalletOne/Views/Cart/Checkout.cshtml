@@ -1,0 +1,21 @@
+﻿@model WalletOne.Domain.Entities.ShippingDetails
+
+@{
+    ViewBag.Title = "WalletOneStore: Checkout";
+}
+<h2>Check out now</h2>
+Please enter your details, and we'll ship your goods right away!
+@using (Html.BeginForm()) {
+@Html.ValidationSummary()
+    <h3>Ship to</h3>
+    <div>Name: @Html.EditorFor(x => x.Name)</div>
+    <h3>Address</h3>
+    <div>Zip: @Html.EditorFor(x => x.Zip)</div>
+    <div>Country: @Html.EditorFor(x => x.Country)</div>
+    <div>State: @Html.EditorFor(x => x.State)</div>
+    <div>City: @Html.EditorFor(x => x.City)</div>
+    <div>Street: @Html.EditorFor(x => x.Address)</div>
+    <p align="center">
+        <input class="actionButtons" type="submit" value="Complete order"/>
+    </p>
+}
